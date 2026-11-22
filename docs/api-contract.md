@@ -117,7 +117,7 @@ HTTP status: `200`.
 | `RATE_LIMITED` | 429 | Too many requests | Back off and retry. |
 | `INTERNAL_ERROR` | 500 | Unexpected server failure **or feature not yet implemented** | Show generic error; no fake result. |
 
-Not yet emitted in Phase 0 (no provider, no rate limiter): `PROVIDER_TIMEOUT`, `PROVIDER_ERROR`, `RATE_LIMITED`. They are part of the contract now so both sides can implement against it.
+Emission status (end of Phase 2): `INVALID_INPUT`, `TEXT_TOO_LONG`, `UNSUPPORTED_LANGUAGE`, and `INTERNAL_ERROR` are emitted by the route. `PROVIDER_TIMEOUT`, `PROVIDER_ERROR`, and `RATE_LIMITED` are produced by the Groq adapter and mapped to these codes, but are not yet reachable through `/api/v1/process` because the route still returns the Phase 2 placeholder. They become reachable in Phase 3.
 
 ## 6. Request ID handling
 - Backend generates a UUID per request and sets `X-Request-Id` on every response (success and error).
@@ -265,3 +265,34 @@ Response `500`:
 - Requests with no `Origin` header (curl, server-to-server): allowed.
 - Other origins: allowed only if listed in `ALLOWED_ORIGINS`.
 - Allowed methods: `GET`, `POST`. Allowed headers: `Content-Type`, `X-Request-Id`.
+
+## 11. Provider diagnostic endpoint (Phase 2)
+
+`GET /api/v1/config` → `200`
+```json
+{
+  "provider": "mock",
+  "model": null,
+  "timeoutMs": 30000,
+  "maxRetries": 1,
+  "credentialsPresent": false
+}
+```
+
+| Field | Notes |
+| --- | --- |
+| `provider` | `"groq"` or `"mock"` |
+| `model` | Model ID when provider is `groq`; otherwise `null` |
+| `timeoutMs` | From `AI_TIMEOUT_MS` |
+| `maxRetries` | From `AI_MAX_RETRIES` |
+| `credentialsPresent` | Boolean only, and only meaningful when provider is `groq`. **Never the key value.** |
+
+This endpoint is a development diagnostic. It must never expose credentials, and it should be removed or authenticated before any public deployment.
+
+### Implemented Actions
+-   **simplify**: Returns simplified text preserving original meaning. Uses Groq Qwen 3.8 27B.
+    -   Input: `{action: "simplify", text: string, source: {...}}`
+    -   Output: `{success: true, action: "simplify", result: {text, language, steps, caveats}, requestId}`
+
+### Not Yet Implemented
+-   explain, translate, steps, listen (Phase 4)

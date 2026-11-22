@@ -2,16 +2,9 @@
   "name": "studylens",
   "version": "1.0.0",
   "private": true,
-  "description": "AI-powered learning and accessibility assistant",
-  "workspaces": [
-    "shared",
-    "backend",
-    "extension"
-  ],
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10"
-  },
+  "description": "AI-powered learning and accessibility assistant (Chrome extension + Node backend)",
+  "workspaces": ["shared", "backend", "extension"],
+  "engines": { "node": ">=20.0.0", "npm": ">=10" },
   "scripts": {
     "install:all": "npm install",
     "build:shared": "npm run build --workspace=shared",
@@ -24,10 +17,7 @@
     "typecheck:shared": "npm run typecheck --workspace=shared",
     "typecheck:backend": "npm run typecheck --workspace=backend",
     "typecheck": "npm run build:shared && npm run typecheck:shared && npm run typecheck:backend",
-    "test": "npm run test --workspace=shared && npm run test --workspace=extension"
+    "test": "npm run test --workspace=shared && npm run test --workspace=backend && npm run test --workspace=extension"
   },
-  "license": "MIT",
-  "allowScripts": {
-    "esbuild@0.28.2": true
-  }
+  "license": "MIT"
 }

@@ -131,3 +131,119 @@ body {
 }
 
 .sl-secondary:hover { background: #fdf2f2; }
+
+/* --- Health Badge --- */
+.sl-health-badge {
+  font-size: 0.9rem;
+  margin-left: auto;
+}
+.sl-health-checking { opacity: 0.6; }
+.sl-health-connected { color: #27ae60; }
+.sl-health-offline { color: #e74c3c; }
+
+/* --- Sections --- */
+.sl-section {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ecf0f1;
+}
+.sl-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.sl-section-title {
+  font-size: 1rem;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+/* --- Simplify Button --- */
+.sl-accent {
+  background: #8e44ad;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 12px;
+}
+.sl-accent:hover:not(:disabled) { background: #7d3c98; }
+.sl-accent:disabled { opacity: 0.5; cursor: not-allowed; background: #95a5a6; }
+
+/* --- Loading Spinner --- */
+.sl-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+.sl-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 1.2rem;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --- Error Box with Retry --- */
+.sl-error-box {
+  background: #fdf2f2;
+  border: 1px solid #e74c3c;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 8px;
+}
+.sl-error-message {
+  color: #c0392b;
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+}
+.sl-retry {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.sl-retry:hover { background: #c0392b; }
+
+/* --- Result Card --- */
+.sl-result-card {
+  border-left: 3px solid #8e44ad;
+}
+.sl-badge-success {
+  background: #d5f5e3;
+  color: #27ae60;
+}
+.sl-result-text {
+  background: #fafafa;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ecf0f1;
+}
+
+/* --- Copy Button --- */
+.sl-copy {
+  background: transparent;
+  color: #8e44ad;
+  border: 1px solid #8e44ad;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+.sl-copy:hover { background: #f4ecf7; }
+.sl-copied {
+  background: #27ae60 !important;
+  color: white !important;
+  border-color: #27ae60 !important;
+}

@@ -11,7 +11,7 @@
     "build:content": "vite build --config vite.content.config.ts",
     "build": "tsc --noEmit && npm run build:app && npm run build:content",
     "pretest": "rm -rf dist-tests && tsc -p tsconfig.test.json && node -e \"require('fs').writeFileSync('dist-tests/package.json','{\\\"type\\\":\\\"commonjs\\\"}')\"",
-    "test": "node --test dist-tests/content/capture.test.js dist-tests/types/messages.test.js"
+    "test": "node --test dist-tests/content/capture.test.js dist-tests/types/messages.test.js dist-tests/services/backend.test.js dist-tests/sidepanel/App.test.js"
   },
   "dependencies": {
     "@studylens/shared": "*",

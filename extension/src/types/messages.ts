@@ -48,3 +48,18 @@ export function isSupportedUrl(url: string | undefined): boolean {
   if (!url) return false;
   return /^https?:\/\//i.test(url) || /^file:\/\//i.test(url);
 }
+
+// New message types for Phase 3 Simplify workflow
+export const SIMPLIFY_REQUEST = 'SIMPLIFY_REQUEST';
+export const SIMPLIFY_SUCCESS = 'SIMPLIFY_SUCCESS';
+export const SIMPLIFY_ERROR = 'SIMPLIFY_ERROR';
+export const BACKEND_HEALTH_CHECK = 'BACKEND_HEALTH_CHECK';
+export const BACKEND_HEALTH_RESULT = 'BACKEND_HEALTH_RESULT';
+
+export type BackendHealthStatus = 'checking' | 'connected' | 'offline';
+
+export interface SimplifyState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  simplifiedText?: string;
+  errorMessage?: string;
+}

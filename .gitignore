@@ -1,13 +1,13 @@
-
 # Dependencies
 node_modules/
 
 # Build output
 dist/
+dist-tests/
 build/
 *.tsbuildinfo
 
-# Environment files and secrets
+# Environment / secrets
 .env
 .env.*
 !.env.example
@@ -22,12 +22,8 @@ data/
 *.log
 npm-debug.log*
 
-# Editor settings
+# Editor / OS
 .vscode/
 .idea/
-
-# Operating system
 .DS_Store
-Thumbs.db
-
-dist-tests/
+Thumbs.db01-AI-Powered-Accessibility-Layer-for-Websites/

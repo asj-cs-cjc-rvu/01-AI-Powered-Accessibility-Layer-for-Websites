@@ -21,8 +21,11 @@ Primary content scope: NCERT-style educational HTML pages, with extraction kept 
 | Selected-text capture | **Implemented** — trim, 5000-char limit, truncation flag, source metadata |
 | Extension ↔ content-script messaging | **Implemented** — typed messages with runtime validation |
 | Extension unit tests | Implemented (18 tests) |
-| Extension → backend calls | **Not implemented** (Phase 2) |
-| AI simplify / explain / translate / steps / listen | **Not implemented** (Phases 2–3) |
+| Backend `POST /api/v1/process` | **Implemented** — Validates input, calls Groq Qwen 3.8 27B, returns simplified text |
+| AI Provider Adapter | **Implemented** — Groq Cloud with Qwen 3.8 27B (preview model) |
+| Simplify Feature | **Implemented** — Real AI simplification with prompt engineering + output validation |
+| Extension ↔ Backend Communication | **Implemented** — Health check, process request, error handling, offline detection |
+| Automated Tests | **93 passing** — Shared (13) + Backend (45) + Extension (35) |
 | Database / request history | **Not implemented** — no schema exists |
 
 `npm run build` now builds shared, backend, and extension successfully.
@@ -111,11 +114,12 @@ npm run build            # also runs the extension build: FAILS by design until 
 ## Test
 
 ```bash
-npm test        # 31 tests: 13 shared contract + 18 extension
+npm test        # 93 tests: 13 shared + 45 backend + 35 extension
 npm run typecheck
 ```
 
-Coverage: shared API contract validation, selection-building logic, and extension message guards. Browser messaging is verified manually against real webpages.
+All provider tests use injected mocks. Zero network calls. Zero token spend.
+Real AI testing performed manually on Wikipedia, Khan Academy, and NASA pages.
 
 ## Run the backend
 
@@ -158,12 +162,12 @@ Not available yet. There is no `manifest.json` and no bundled UI. When Phase 1 l
 | `NODE_ENV` | `development` | Yes | Runtime mode label |
 | `ALLOWED_ORIGINS` | empty | Yes | Extra CORS origins, comma-separated |
 | `MAX_TEXT_LENGTH` | `5000` | Informational | Enforced value lives in shared contract |
-| `AI_PROVIDER` | `openai` | No (Phase 2) | Provider selection |
-| `AI_MODEL` | `gpt-4o-mini` | No (Phase 2) | Model id |
-| `AI_API_KEY` | empty | No (Phase 2) | Backend-only secret |
-| `AI_TIMEOUT_MS` | `30000` | No (Phase 2) | Provider timeout |
-| `AI_MAX_RETRIES` | `1` | No (Phase 2) | Provider retries |
-| `ENABLE_REQUEST_HISTORY` | `false` | No | Metadata-only history flag |
+| `AI_PROVIDER` | `mock` | Yes | `groq` (billable) or `mock` (offline, free) |
+| `GROQ_API_KEY` | empty | Only if `groq` | Backend-only secret. Never commit. |
+| `GROQ_MODEL` | `qwen/qwen3.8-27b` | Only if `groq` | Preview model, $0.80/1M in, $4.00/1M out |
+| `GROQ_BASE_URL` | `https://api.groq.com/openai/v1` | Only if `groq` | OpenAI-compatible base |
+| `AI_TIMEOUT_MS` | `30000` | Yes | Provider timeout via AbortController |
+| `AI_MAX_RETRIES` | `1` | Yes | Retries on retryable failures only |
 
 `.env` is git-ignored; only `.env.example` is committed.
 
@@ -182,6 +186,12 @@ Only the text needed for the requested action is sent. No passwords or private f
 - No database, history, speech, translation, or reading view.
 - Automated tests cover pure logic; browser flows are manually verified.
 - Provider/rate-limit error codes are specified but not yet emitted.
+- The Groq adapter is tested but not yet invoked by `/api/v1/process`.
+- `qwen/qwen3.8-27b` is a billable **preview** model that Groq may discontinue; change `GROQ_MODEL` to switch.
+- `/api/v1/config` is a development diagnostic and must be secured or removed before public deployment.
+- `qwen/qwen3.8-27b` is a **billable preview model** ($0.80/1M input, $4.00/1M output). May be discontinued.
+- Backend currently runs locally only. Production requires HTTPS + authentication.
+- Node 18.19.1 supported but shows engine warnings; Node ≥20 recommended.
 
 ## Documentation
 - [Product requirements](docs/product-requirements.md)
